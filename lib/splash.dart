@@ -1,5 +1,5 @@
-
 import 'package:better_player_example/single_video_example/better_player_page.dart';
+import 'package:better_player_example/slider/slider_page.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -40,6 +40,13 @@ class _SplashState extends State<Splash> {
                   }
                 },
                 child: Text("list image video player")),
+            ElevatedButton(
+                onPressed: () async {
+                  if (await Permission.storage.request().isGranted) {
+                    createFolders(type: "slider");
+                  }
+                },
+                child: Text("slider image video player")),
           ],
         ),
       ),
@@ -56,9 +63,14 @@ class _SplashState extends State<Splash> {
             context,
             MaterialPageRoute(builder: (context) => VideoPlayerPage()),
           )
-        : Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ListPlayerPage()),
-          );
+        : type == "slider"
+            ? Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SliderPage()),
+              )
+            : Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ListPlayerPage()),
+              );
   }
 }
