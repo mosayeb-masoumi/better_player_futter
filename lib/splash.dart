@@ -1,9 +1,13 @@
+import 'package:better_player_example/list_video_main_example/video_list_page.dart';
+import 'package:better_player_example/list_video_pagination_reusable/list_video_pagination_reusable.dart';
+import 'package:better_player_example/list_video_reusable/reusable_video_list_page.dart';
 import 'package:better_player_example/single_video_example/better_player_page.dart';
 import 'package:better_player_example/slider/slider_page.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'list_video_example/list_video_page.dart';
+import 'list_video_pagination/list_video_pagination.dart';
 
 class Splash extends StatefulWidget {
   const Splash({Key? key}) : super(key: key);
@@ -47,6 +51,48 @@ class _SplashState extends State<Splash> {
                   }
                 },
                 child: Text("slider image video player")),
+
+
+            ElevatedButton(
+                onPressed: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => VideoListPage()),
+                  );
+                },
+                child: Text("video list main example page")),
+
+            ElevatedButton(
+                onPressed: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ReusableVideoListPage()),
+                  );
+                },
+                child: Text("reusable video list page")),
+
+            ElevatedButton(
+                onPressed: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ListVideoPagination()),
+                  );
+                },
+                child: Text("list video pagination")),
+
+
+            // ElevatedButton(
+            //     onPressed: () async {
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(builder: (context) => ListVideoPaginationReusablePage()),
+            //       );
+            //     },
+            //     child: Text("list video pagination reusable")),
+            //
+
+
+
           ],
         ),
       ),

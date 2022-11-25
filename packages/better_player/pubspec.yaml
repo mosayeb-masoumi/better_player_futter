@@ -9,9 +9,7 @@ documentation: https://jhomlala.github.io/betterplayer/
 
 environment:
   sdk: ">=2.17.0-266.8.beta <3.0.0"
-#  sdk: '>=2.18.0-165.1.beta <3.0.0'
-#  sdk: '>=2.12.0 <3.0.0'
-#  flutter: ">=2.2.3"
+
 
 dependencies:
   flutter:
@@ -26,6 +24,7 @@ dependencies:
   path_provider: ^2.0.5
   collection: ^1.15.0
   xml: ^5.3.0
+  infinite_scroll_pagination: ^3.1.0
 
 
 dev_dependencies:
