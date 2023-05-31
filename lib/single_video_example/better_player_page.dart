@@ -20,12 +20,15 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
 
 
   late BetterPlayerController betterPlayerController;
-  String videoUrl = "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_1MB.mp4";
+  String videoUrl = "";
   String videoPath = "" ;
   bool sourceChecked = false;
+
+   Duration currentTime = const Duration(seconds: 0);
   @override
   void initState() {
 
+    videoUrl = "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_1MB.mp4";
     _checkVideoAlreadySaved();
 
     super.initState();
@@ -41,6 +44,8 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
 
         child: Column(
           children: [
+
+            SizedBox(height: 100,),
             Center(
 
               child: sourceChecked
@@ -53,7 +58,14 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
 
             ElevatedButton(onPressed: (){
                  saveVideoInGallery();
-            }, child: Text("save movie ion gallery"))
+            }, child: Text("save movie ion gallery")),
+
+            ElevatedButton(onPressed: (){
+             setState(() {
+               // videoUrl = "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_2MB.mp4";
+               _setupController(videoUrl,"480p");
+             });
+            }, child: Text("change quality from 360 to 480")),
           ],
         ),
         ),
@@ -88,16 +100,15 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     }
   }
 
-  void _setupController(String url) {
-    BetterPlayerConfiguration betterPlayerConfiguration =
-    BetterPlayerConfiguration(
+  void _setupController(String url ,String quality) {
+    BetterPlayerConfiguration betterPlayerConfiguration = BetterPlayerConfiguration(
         aspectRatio: 16 / 9,
         fit: BoxFit.contain,
         autoDispose: false,
         autoPlay: true,
         showPlaceholderUntilPlay: true,
-
-
+        // startAt: Duration(seconds: startFromSecond),
+        startAt: currentTime,
 
         looping: false,
         controlsConfiguration: BetterPlayerControlsConfiguration(
@@ -108,17 +119,33 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
             overflowMenuIconsColor: Colors.white,
             enableSkips: false,
             // playIcon: const AssetImage("assets/images/play_icon.png"),
-            enablePlayPause: false));
+            enablePlayPause: false,
+           enableOverflowMenu: true,
 
 
+        ));
+
+
+    if (quality == '360p') {
+      // videoUrl = 'VIDEO_URL_360P';
+      videoUrl = 'https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_1MB.mp4';
+    } else if (quality == '480p') {
+      // videoUrl = 'VIDEO_URL_480P';
+      videoUrl = 'https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_2MB.mp4';
+    } else if (quality == '720p') {
+      videoUrl = 'VIDEO_URL_720P';
+      videoUrl = 'https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_5MB.mp4';
+    }
 
 
     // // check if video already downloaded  play video from path or else play from network
     BetterPlayerDataSource? _betterPlayerDataSource = videoPath == ""
         ? BetterPlayerDataSource(BetterPlayerDataSourceType.network, videoUrl,
+
             // placeholder: _buildVideoPlaceholder(videoModelItem.cover),
-            cacheConfiguration:
-                const BetterPlayerCacheConfiguration(useCache: true))
+            cacheConfiguration: const BetterPlayerCacheConfiguration(useCache: true) ,
+
+    )
         : BetterPlayerDataSource(BetterPlayerDataSourceType.file, videoPath,
             // placeholder: _buildVideoPlaceholder(videoModelItem.cover),
             cacheConfiguration:
@@ -127,9 +154,16 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
 
 
 
-    betterPlayerController =
-        BetterPlayerController(betterPlayerConfiguration);
+    betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
     betterPlayerController.setupDataSource(_betterPlayerDataSource);
+
+    // Add listener to the BetterPlayerController
+    betterPlayerController.addEventsListener((event) {
+
+      if (event.betterPlayerEventType == BetterPlayerEventType.progress) {
+          currentTime = event.parameters!['progress'];
+      }
+    });
   }
 
   Widget _buildVideoPlaceholder(String cover) {
@@ -164,7 +198,8 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
 
       sourceChecked = true;
     });
-    _setupController(videoUrl);
+    _setupController(videoUrl,"360p");
+    // _setupController(videoUrl);
 
   }
 
@@ -186,4 +221,27 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     }
   }
 
+
+
+
+
+
+  // void changeVideoQuality(String quality, int startFromSecond) {
+  //   String videoUrl;
+  //
+  //   if (quality == '360p') {
+  //     videoUrl = 'VIDEO_URL_360P';
+  //   } else if (quality == '480p') {
+  //     videoUrl = 'VIDEO_URL_480P';
+  //   } else if (quality == '720p') {
+  //     videoUrl = 'VIDEO_URL_720P';
+  //   }
+  //
+  //   _betterPlayerController.setupDataSource(
+  //     BetterPlayerDataSource.network(
+  //       videoUrl,
+  //       startAt: Duration(seconds: startFromSecond),
+  //     ),
+  //   );
+  // }
 }
